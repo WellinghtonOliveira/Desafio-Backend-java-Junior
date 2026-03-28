@@ -7,6 +7,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
         GerenciadorTarefas gerenciador = new GerenciadorTarefas();
 
+        gerenciador.carregarTarefas();
+
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -14,7 +16,8 @@ public class Main {
             System.out.println("2 - Listar tarefas");
             System.out.println("3 - Atualizar status");
             System.out.println("4 - Remover tarefa");
-            System.out.println("5 - Sair");
+            System.out.println("5 - Buscar tarefas por status");
+            System.out.println("6 - Sair");
 
             int opcao = scanner.nextInt();
             scanner.nextLine();
@@ -40,7 +43,14 @@ public class Main {
                     System.out.println("Novo status (PENDENTE, EM_ANDAMENTO, CONCLUIDA):");
                     String status = scanner.nextLine();
 
-                    gerenciador.atualizarStatus(id, StatusTarefa.valueOf(status));
+                    try {
+                        StatusTarefa novoStatus = StatusTarefa.valueOf(status.toUpperCase());
+                        gerenciador.atualizarStatus(id, novoStatus);
+
+                    }catch (IllegalArgumentException e) {
+                        System.out.println("Status inválido.");
+                    };
+
                 break;
                 case 4:
                     System.out.println("ID da tarefa para remover:");
@@ -51,6 +61,18 @@ public class Main {
                 break;
 
                 case 5:
+                    System.out.println("Digite o status (PENDENTE, EM_ANDAMENTO, CONCLUIDA):");
+                    String statusBusca = scanner.nextLine();
+
+                    try {
+                        StatusTarefa stato = StatusTarefa.valueOf(statusBusca.toUpperCase());
+                        gerenciador.buscarPorStatus(stato);
+                    } catch ( IllegalArgumentException e) {
+                        System.out.println("Status invalído");
+                    }
+                break;
+
+                case 6:
                     scanner.close();
                     return;
             }

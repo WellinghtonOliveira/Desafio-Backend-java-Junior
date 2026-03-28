@@ -40,4 +40,15 @@ public class Tarefa {
     public void setStatus(StatusTarefa status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + id +
+                "\nTitulo: " + titulo +
+                "\nDescricao: " + descricao +
+                "\nStatus: " + status +
+                "\nData: " + dataCriacao +
+                "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=";
+    }
 }
+

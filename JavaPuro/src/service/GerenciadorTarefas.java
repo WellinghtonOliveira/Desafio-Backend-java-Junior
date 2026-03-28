@@ -1,57 +1,123 @@
 package service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import model.StatusTarefa;
 import model.Tarefa;
 
+import repository.TarefaRepository;
+
 public class GerenciadorTarefas {
     private List<Tarefa> tarefas = new ArrayList<>();
+    private TarefaRepository repository = new TarefaRepository();
     private Long contadorId = 1L;
 
     public void criarTarefa(String titulo, String descricao) {
         Tarefa tarefa = new Tarefa(contadorId, titulo, descricao);
         tarefas.add(tarefa);
         contadorId++;
+
+        repository.salvar(tarefas);
+        System.out.println("Tarefa criada com sucesso!");
+    }
+
+    public void salvarTarefas() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("tarefas.txt"));
+
+            for (Tarefa tarefa : tarefas) {
+                String linha = 
+                    tarefa.getId() + ";" +
+                    tarefa.getTitulo() + ";" +
+                    tarefa.getDescricao() + ";" +
+                    tarefa.getStatus() + ";" +
+                    tarefa.getDataCriacao();
+
+                writer.write(linha);
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar tarefas.");
+        }
+    }
+
+    public void carregarTarefas() {
+
+        tarefas = repository.carregar();
+
+        for (Tarefa tarefa : tarefas) {
+            if (tarefa.getId() >= contadorId) {
+                contadorId = tarefa.getId() + 1;
+            }
+        }
+        
     }
 
     public void listarTarefas() {
-        if (tarefas.size() == 0) {
-            System.out.println("Sem tarefas no momento!");
+        ordenarPorData();
+
+        if (tarefas.isEmpty()) {
+            System.out.println("Nenhuma tarefa cadastrada!");
             return;
         }
 
         for (Tarefa tarefa : tarefas) {
-            System.out.println("---------------------");
-            System.out.println("ID: " + tarefa.getId());
-            System.out.println("Titulo: " + tarefa.getTitulo());
-            System.out.println("Status: " + tarefa.getStatus());
-            System.out.println("Data: " + tarefa.getDataCriacao());
-            System.out.println("---------------------");
+            System.out.println(tarefa);
         }
     }
 
     public void atualizarStatus(Long id, StatusTarefa novoStatus) {
-        for (Tarefa tarefa : tarefas) {
-            if (tarefa.getId().equals(id)) {
-                tarefa.setStatus(novoStatus);
-                System.out.println("Status atualizado!");
-                return;
-            }
-        }
+        Tarefa tarefa = buscarPorId(id);
 
-        System.out.println("Tarefa não encontrada");
+        if (tarefa != null) {
+            tarefa.setStatus(novoStatus);
+            repository.salvar(tarefas);
+            System.out.println("Status atualizado!");
+        }else {
+            System.out.println("Tarefa não encontrada.");
+        }
     }
 
     public void removerTarefa(Long id) {
+        Tarefa tarefa = buscarPorId(id);
+
+        if (tarefa != null) {
+            tarefas.remove(tarefa);
+            repository.salvar(tarefas);
+            System.out.println("Tarefa removida!");
+        }else {
+            System.out.println("Tarefa não encontrada.");
+        }
+    }
+
+    public Tarefa buscarPorId(Long id) {
         for (Tarefa tarefa : tarefas) {
-            if (tarefa.getId().equals(id)) {
-                tarefas.remove(tarefa);
-                System.out.println("Tarefa removida!");
+            return tarefa;
+        }
+
+        return null;
+    }
+
+    public void buscarPorStatus(StatusTarefa status) {
+        boolean encontrou = false;
+
+        for (Tarefa tarefa : tarefas) {
+            if (tarefa.getStatus() == status) {
+                System.out.println(tarefa);
+                encontrou = true;
             }
         }
 
-        System.out.println("Tarefa não encontrada");
+        if (!encontrou) {
+            System.out.println("Nenhuma tarefa encontrada.");
+        }
+    }
+
+    public void ordenarPorData() {
+        Collections.sort(tarefas, Comparator.comparing(Tarefa::getDataCriacao));
     }
 }
