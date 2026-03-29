@@ -58,7 +58,7 @@ public class Main {
                     scanner.nextLine();
 
                     gerenciador.removerTarefa(idRemover);
-                break;
+                break; 
 
                 case 5:
                     System.out.println("Digite o status (PENDENTE, EM_ANDAMENTO, CONCLUIDA):");
