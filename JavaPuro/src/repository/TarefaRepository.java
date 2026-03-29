@@ -28,7 +28,7 @@ public class TarefaRepository {
             System.out.println("Erro ao salvar tarefas");
         }
     }
-
+ 
     public List<Tarefa> carregar() {
         List<Tarefa> tarefas = new ArrayList<>();
 
@@ -57,5 +57,5 @@ public class TarefaRepository {
         
 
         return tarefas;
-    }
+    } 
 }
