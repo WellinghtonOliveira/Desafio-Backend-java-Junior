@@ -2,10 +2,13 @@ import service.GerenciadorTarefas;
 import java.util.Scanner;
 
 import model.StatusTarefa;
+import repository.TarefaRepository;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        GerenciadorTarefas gerenciador = new GerenciadorTarefas();
+        TarefaRepository repository = new TarefaRepository();
+
+        GerenciadorTarefas gerenciador = new GerenciadorTarefas(repository);
 
         gerenciador.carregarTarefas();
 
