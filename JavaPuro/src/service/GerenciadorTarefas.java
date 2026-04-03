@@ -12,7 +12,7 @@ import repository.TarefaRepository;
 
 public class GerenciadorTarefas {
     private List<Tarefa> tarefas = new ArrayList<>();
-    private TarefaRepository repository = new TarefaRepository();
+    private TarefaRepository repository;
     private Long contadorId = 1L;
 
     public void criarTarefa(String titulo, String descricao) {
@@ -22,6 +22,10 @@ public class GerenciadorTarefas {
 
         repository.salvar(tarefas);
         System.out.println("Tarefa criada com sucesso!");
+    }
+
+    public GerenciadorTarefas(TarefaRepository repository) {
+        this.repository = repository;
     }
 
     public void salvarTarefas() {
