@@ -3,19 +3,18 @@ package com.wellinghton.tarefas.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @Entity
+@JsonPropertyOrder({"id", "titulo", "descricao", "status", "dataCriacao"})
 public class Tarefa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String titulo;
-
     private String descricao;
-
     private String status;
-
     private LocalDate dataCriacao;
 
     public Tarefa() {
